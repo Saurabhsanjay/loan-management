@@ -1,9 +1,11 @@
 const { sequelize } = require("./src/db/connection");
 const colors = require("colors");
 const express = require("express");
-
- const applicationRoutes = require("./src/routes/application.route");
-  const userRoutes = require("./src/routes/user.route");
+const https = require("https");
+const path = require("path");
+const fs = require("fs");
+const applicationRoutes = require("./src/routes/application.route");
+const userRoutes = require("./src/routes/user.route");
 const morgan = require("morgan");
 require("dotenv").config({ path: "./.env" });
 
@@ -26,12 +28,18 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 //app routes
-  app.use("/v1", applicationRoutes);
-  app.use("/v1", userRoutes);
+app.use("/v1", applicationRoutes);
+app.use("/v1", userRoutes);
 
 //error handlers
 app.use(handleRouteNotFound);
 app.use(errorHandler);
+
+app.use('/',(req,res,next)=>{
+  res.send("hello from ssl srver")
+})
+
+
 
 //Sync the model with the database
 (async () => {
@@ -46,7 +54,13 @@ app.use(errorHandler);
 // for Starting the server
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT,  () => {
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`.bgBlue);
+// });
 
-  console.log(`Server running on port ${PORT}`.bgBlue);
-});
+const sslServer=https.createServer({
+  key:'',
+  cert:'',
+},app)
+
+sslServer.listen(3443,()=>console.log(`Secure sever on port 3443`))
