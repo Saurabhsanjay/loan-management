@@ -10,7 +10,9 @@ const morgan = require("morgan");
 require("dotenv").config({ path: "./.env" });
 
 const app = express();
-
+const file = fs.readFileSync(
+  "./80224907A0A00FC9629D24B6C658D222.txt"
+);
 // for Cross-Origin Resource Sharing (CORS)
 const cors = require("cors");
 const {
@@ -35,32 +37,35 @@ app.use("/v1", userRoutes);
 app.use(handleRouteNotFound);
 app.use(errorHandler);
 
-app.use('/',(req,res,next)=>{
-  res.send("hello from ssl srver")
-})
 
-
-
-//Sync the model with the database
-(async () => {
-  try {
-    await sequelize.sync();
-    console.log("Sequelize Database synced");
-  } catch (error) {
-    console.error("Error syncing database:", error);
+(
+  //Sync the model with the database
+  async () => {
+    try {
+      await sequelize.sync();
+      console.log("Sequelize Database synced");
+    } catch (error) {
+      console.error("Error syncing database:", error);
+    }
   }
-})();
+)();
 
 // for Starting the server
 const PORT = process.env.PORT || 3000;
+app.get(
+  "/.well-known/pki-validation/80224907A0A00FC9629D24B6C658D222.txt",
+  (req, res) => {
+    res.sendFile(file, "hello from ssl srver");
+  }
+);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`.bgBlue);
+});
 
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`.bgBlue);
-// });
+// const sslServer=https.createServer({
+//   key:'',
+//   cert:'',
+// },app)
 
-const sslServer=https.createServer({
-  key:'',
-  cert:'',
-},app)
+// sslServer.listen(3443,()=>console.log(`Secure sever on port 3443`))
 
-sslServer.listen(3443,()=>console.log(`Secure sever on port 3443`))
