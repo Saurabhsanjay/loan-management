@@ -34,7 +34,7 @@ app.use("/v1", applicationRoutes);
 app.use("/v1", userRoutes);
 
 //error handlers
-//app.use(handleRouteNotFound);
+app.use(handleRouteNotFound);
 app.use(errorHandler);
 
 //Sync the model with the database

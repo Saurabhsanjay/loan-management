@@ -24,6 +24,7 @@
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "mysql2": "^3.4.2",
+    "node-cache": "^5.1.2",
     "nodemon": "^2.0.22",
     "redis": "^4.6.7",
     "sequelize": "^6.32.1"
