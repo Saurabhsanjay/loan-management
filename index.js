@@ -50,6 +50,9 @@ app.use(errorHandler);
 // for Starting the server
 const PORT = process.env.PORT || 3000;
 
+app.get('/',(req,res)=>{
+  return res.send("server secured success")
+})
 
 const httpsServer=https.createServer({
   key,
