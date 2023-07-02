@@ -1,48 +1,49 @@
+const { promisify } = require("util");
 const Application = require("../models/application.model");
-const NodeCache = require("node-cache");
+const { redisClient } = require("../db/connection");
 
-const cache = new NodeCache();
+const getAsync = promisify(redisClient.get).bind(redisClient);
+const setAsync = promisify(redisClient.set).bind(redisClient);
 
-// Create a new application
+
+// Create a new user
 const createApplication = async (ApplicationData) => {
   try {
-    const application = await Application.create(ApplicationData);
-    const cachedApplication = cache.get("applications");
-
-    let cachedData = [];
-    if (cachedApplication) {
-      cachedData = cachedApplication;
-      cachedData.push(application);
-
-      cache.set("applications", cachedData, 180);
-      console.log("Successfully set cache");
-    } else {
-      cachedData.push(application);
-      cache.set("applications", cachedData, 180);
-      console.log("Successfully set cache");
-    }
-
-    return application;
+      const application = await Application.create(ApplicationData);
+      const cachedApplication = await getAsync("applications");
+   
+      let cachedData=[];
+      if(cachedApplication){
+         cachedData = JSON.parse(cachedApplication);
+         cachedData.push(application)
+         
+         await setAsync("applications", JSON.stringify(cachedData), "EX", 180);
+          console.log("success")
+     }else{
+        cachedData.push(application)
+     }
+     await setAsync("applications", JSON.stringify(cachedData), "EX", 180);
+     console.log("set cache")
+     return application;
   } catch (error) {
     console.error("Error creating application:", error);
     throw new Error("Failed to create application");
   }
 };
 
-// Retrieve applications
 async function getApplications() {
   try {
-    const cachedApplications = cache.get("applications");
+    const cachedUsers = await getAsync("applications");
 
-    if (cachedApplications) {
-      console.log("Retrieved from cache");
-      return cachedApplications;
+    if (cachedUsers) {
+      console.log("Get from cache");
+      return JSON.parse(cachedUsers);
     }
-
+   
     const applications = await Application.findAll();
 
-    cache.set("applications", applications, 180);
-    console.log("Successfully set cache");
+    await setAsync("applications", JSON.stringify(applications), "EX", 180);
+    console.log("Set cache");
 
     return applications;
   } catch (error) {
@@ -50,5 +51,4 @@ async function getApplications() {
     throw new Error("Failed to fetch applications");
   }
 }
-
 module.exports = { createApplication, getApplications };
