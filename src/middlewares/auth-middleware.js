@@ -4,7 +4,7 @@ const { redisClient } = require("../db/connection");
 require("dotenv").config(".././.env");
 
 const authMiddleware = (req, res, next) => {
-  const key = req.headers.authorization.split(' ')[1];
+  const key = req.headers?.authorization?.split(' ')[1];
 
   // Check if the key exists in Redis
   redisClient.get(key, (err, token) => {
