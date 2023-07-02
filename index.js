@@ -2,7 +2,7 @@ const { sequelize } = require("./src/db/connection");
 const colors = require("colors");
 const express = require("express");
 const https = require("https");
-const path = require("path");
+
 const fs = require("fs");
 const applicationRoutes = require("./src/routes/application.route");
 const userRoutes = require("./src/routes/user.route");
@@ -51,7 +51,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 
 app.get('/',(req,res)=>{
-  return res.send("github ci/cd secured success")
+  return res.send("Hello from prakash")
 })
 
 const httpsServer=https.createServer({
@@ -59,4 +59,4 @@ const httpsServer=https.createServer({
   cert,
 },app)
 
- httpsServer.listen(PORT, () => console.log(`Secure sever on port ${PORT}`));
+ httpsServer.listen(PORT, () => console.log(`Secure sever on port ${PORT}`.bgBlue));
