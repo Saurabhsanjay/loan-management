@@ -11,7 +11,7 @@ require("dotenv").config({ path: "./.env" });
 
 const app = express();
 const file = fs.readFileSync(
-  "./80224907A0A00FC9629D24B6C658D222.txt"
+  "./390211EBB13B523336BBD9896AB50D09.txt"
 );
 // for Cross-Origin Resource Sharing (CORS)
 const cors = require("cors");
@@ -34,7 +34,7 @@ app.use("/v1", applicationRoutes);
 app.use("/v1", userRoutes);
 
 //error handlers
-app.use(handleRouteNotFound);
+//app.use(handleRouteNotFound);
 app.use(errorHandler);
 
 
@@ -53,9 +53,11 @@ app.use(errorHandler);
 // for Starting the server
 const PORT = process.env.PORT || 3000;
 app.get(
-  "/.well-known/pki-validation/80224907A0A00FC9629D24B6C658D222.txt",
+  "http://3.108.52.200/.well-known/pki-validation/390211EBB13B523336BBD9896AB50D09.txt",
   (req, res) => {
-    res.sendFile(file, "hello from ssl srver");
+    res.sendFile(
+      "/home/ubuntu/loan-management/390211EBB13B523336BBD9896AB50D09.txt"
+    );
   }
 );
 app.listen(PORT, () => {
