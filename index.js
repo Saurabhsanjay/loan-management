@@ -51,7 +51,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 
 app.get('/',(req,res)=>{
-  return res.send("server secured success")
+  return res.send("github ci/cd secured success")
 })
 
 const httpsServer=https.createServer({
